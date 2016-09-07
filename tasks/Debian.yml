@@ -1,28 +1,36 @@
 ---
-- name: Ensure apt cache is up to date
-  apt:
-    update_cache: yes
+- name: Check installed packages
+  shell: "dpkg -s {{ item }}"
+  changed_when: "{{installed_packages.rc != 0}}"
+  with_items: "{{required_packages}}"
+  failed_when: False
+  register: installed_packages
 
-- name: Install prerequisite packages
-  apt:
-    pkg: "{{ item }}"
-    state: present
-  with_items:
-    - git
-    # On Ubuntu 12.04 build may fail with the following error:
-    #   python-build: wget (< 1.14) doesn't support Server Name Indication.
-    #   Please install curl (>= 7.18.1) and try again
-    - curl
+- name: Output not installed packages
+  set_fact:
+    has_not_installed_packages: True
+  when: item.rc != 0
+  with_items: "{{installed_packages.results}}"
 
-- name: Install development packages necessary for building Python
-  apt:
-    pkg: "{{ item }}"
-    state: present
-  with_items:
-    - libssl-dev
-    - libbz2-dev
-    - libsqlite3-dev
-    - libreadline-dev
+- block:
+  - name: Ensure apt cache is up to date
+    apt:
+      update_cache: yes
+
+  - name: Install prerequisite packages
+    package:
+      name: "{{item}}"
+    with_items: "{{required_packages}}"
+  when: "{{has_not_installed_packages|default(False)}}"
+  become: yes
+
+- name: Expand PyEnv path
+  shell: "eval echo {{pyenv_path}}"
+  register: pyenv_path_result
+
+- name: Set expanded Py Env path
+  set_fact:
+    pyenv_path: '{{pyenv_path_result.stdout}}'
 
 - name: Install PyEnv
   git:
@@ -30,6 +38,7 @@
     dest: "{{ pyenv_path }}"
     update: "{{pyenv_update_git_install}}"
   become_user: "{{pyenv_owner}}"
+  become: yes
 
 - name: Install PyEnv-virtualenv plugin
   git:
@@ -37,6 +46,7 @@
     dest: "{{ pyenv_path }}/plugins/pyenv-virtualenv"
     update: "{{pyenv_update_git_install}}"
   become_user: "{{pyenv_owner}}"
+  become: yes
 
 - name: Install .pyenvrc
   template:
@@ -45,6 +55,8 @@
     owner: "{{ pyenv_owner }}"
     group: "{{ pyenv_owner }}"
     mode: "0644"
+  become_user: "{{pyenv_owner}}"
+  become: yes
 
 - name: Modify .bashrc
   lineinfile: dest="~/.bashrc"
@@ -52,15 +64,18 @@
               line="source {{ pyenv_path }}/.pyenvrc"
               state=present
   become_user: "{{pyenv_owner}}"
+  become: yes
 
 - name: Install Python interpreters "{{ pyenv_python_versions }}"
   shell: . {{ pyenv_path }}/.pyenvrc && pyenv install {{ item }}
          creates="{{ pyenv_path }}/versions/{{ item }}/bin/python"
   with_items: "{{pyenv_python_versions}}"
   become_user: "{{pyenv_owner}}"
+  become: yes
 
 - name: Create virtual environments
   shell: . {{ pyenv_path }}/.pyenvrc && pyenv virtualenv {{ item.py_version }} {{ item.venv_name }}
          creates="{{ pyenv_path }}/versions/{{ item.venv_name }}/bin/python"
   with_items: "{{pyenv_virtualenvs}}"
   become_user: "{{pyenv_owner}}"
+  become: yes
