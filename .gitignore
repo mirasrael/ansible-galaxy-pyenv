@@ -1,2 +1,3 @@
 .idea/
-*.iml
+*.iml.kitchen/
+.kitchen.local.yml

@@ -1,0 +1,9 @@
+---
+username: kitchen
+ssh_key: W:/work/ansible-roles/ansible-galaxy-pyenv/.kitchen/docker_id_rsa
+image_id: 98425e1de4a7
+container_id: b1f765c4bc31f00dab66a663d877a02504965eaee0ca6a3fc360a36ad0a6f009
+hostname: 192.168.99.100
+port: 32808
+last_action: converge
+last_error: 

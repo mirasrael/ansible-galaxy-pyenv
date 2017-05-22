@@ -1,7 +1,7 @@
 ---
 - name: Check installed packages
   shell: "dpkg -s {{ item }}"
-  changed_when: "{{installed_packages.rc != 0}}"
+  changed_when: "installed_packages.rc != 0"
   with_items: "{{required_packages}}"
   failed_when: False
   register: installed_packages
@@ -21,7 +21,7 @@
     package:
       name: "{{item}}"
     with_items: "{{required_packages}}"
-  when: "{{has_not_installed_packages|default(False)}}"
+  when: "has_not_installed_packages|default(False)"
   become: yes
 
 - name: Expand PyEnv path

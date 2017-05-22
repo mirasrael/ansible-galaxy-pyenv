@@ -1,0 +1,7 @@
+---
+- hosts: test-kitchen
+  vars:
+    pyenv_python_versions: ['2.7.10']
+
+  roles:
+    - role: ansible-galaxy-pyenv
