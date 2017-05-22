@@ -1,8 +1,1 @@
 ---
-required_packages:
-  - git
-  - curl
-  - libssl-dev
-  - libbz2-dev
-  - libsqlite3-dev
-  - libreadline-dev
