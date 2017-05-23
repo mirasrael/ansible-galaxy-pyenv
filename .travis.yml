@@ -2,11 +2,9 @@
 rvm:
 - 2.3
 
-sudo: true
-
 before_script:
 - source <(curl -sL https://raw.githubusercontent.com/zuazo/kitchen-in-travis/0.5.0/scripts/start_docker.sh)
-- curl -O Rakefile https://raw.githubusercontent.com/zuazo/kitchen-in-travis/0.5.0/Rakefile
+- gem install rake kitchen-ansible kitchen-docker
 
 script:
-- travis_retry bundle exec rake integration:docker
+- kitchen test
