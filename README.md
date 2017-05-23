@@ -1,7 +1,7 @@
 avanov.pyenv
 ============
 
-[![Build Status](https://travis-ci.org/avanov/ansible-galaxy-pyenv.svg)](https://travis-ci.org/avanov/ansible-galaxy-pyenv)
+[![Build Status](https://travis-ci.org/mirasrael/ansible-galaxy-pyenv.svg)](https://travis-ci.org/mirasrael/ansible-galaxy-pyenv)
 
 
 Ansible Galaxy role for [pyenv](https://github.com/yyuu/pyenv) on Ubuntu.
