@@ -1,0 +1,16 @@
+- name: Install Python interpreter "{{ pyenv_python_version }}"
+  shell: . {{ pyenv_path }}/.pyenvrc && pyenv install {{ pyenv_python_version }}
+         creates="{{ pyenv_path }}/versions/{{ pyenv_python_version }}/bin/python"
+  become: yes
+  become_user: "{{pyenv_owner}}"
+  async: 3600
+  poll: 0
+  register: python_installation
+
+- name: 'Install Python interpreter "{{ pyenv_python_version }}" - check status'
+  async_status: jid={{ python_installation.ansible_job_id }}
+  become: yes
+  become_user: "{{pyenv_owner}}"
+  register: python_installation_result
+  until: python_installation_result.finished
+  retries: 1000

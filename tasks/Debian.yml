@@ -67,11 +67,13 @@
   become: yes
 
 - name: Install Python interpreters "{{ pyenv_python_versions }}"
-  shell: . {{ pyenv_path }}/.pyenvrc && pyenv install {{ item }}
-         creates="{{ pyenv_path }}/versions/{{ item }}/bin/python"
-  with_items: "{{pyenv_python_versions}}"
-  become_user: "{{pyenv_owner}}"
-  become: yes
+  include: install_pyenv_python.yml
+  vars:
+    pyenv_python_version: '{{ item }}'
+  with_items: '{{ pyenv_python_versions }}'
+  tags:
+   - pyenv
+   - pyenv_python
 
 - name: Create virtual environments
   shell: . {{ pyenv_path }}/.pyenvrc && pyenv virtualenv {{ item.py_version }} {{ item.venv_name }}
