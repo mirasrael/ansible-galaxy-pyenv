@@ -1,0 +1,10 @@
+---
+- hosts: test-kitchen
+  vars:
+    pyenv_python_versions: ['3.6.0']
+    pyenv_virtualenvs:
+      - { venv_name: "latest", py_version: "3.6.0" }
+    pyenv_owner: kitchen
+
+  roles:
+    - role: ansible-galaxy-pyenv

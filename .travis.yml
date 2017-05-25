@@ -7,4 +7,6 @@ before_script:
 - gem install rake kitchen-ansible kitchen-docker
 
 script:
-- kitchen test
+- kitchen test py27
+- kitchen test py36
+

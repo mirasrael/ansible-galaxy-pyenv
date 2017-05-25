@@ -18,9 +18,11 @@ transport:
 
 platforms:
   - name: ubuntu-14.04
-  - name: ubuntu-16.04
 
 suites:
   - name: py27
     run_list:
     attributes:
+  - name: py36
+    run_list:
+    attributes:            
