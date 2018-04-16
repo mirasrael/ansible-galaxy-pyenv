@@ -34,7 +34,7 @@
 
 - name: Install PyEnv
   git:
-    repo: https://github.com/yyuu/pyenv.git
+    repo: https://github.com/pyenv/pyenv.git
     dest: "{{ pyenv_path }}"
     update: "{{pyenv_update_git_install}}"
   become_user: "{{pyenv_owner}}"
