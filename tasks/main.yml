@@ -3,7 +3,7 @@
   with_first_found:
     - "{{ ansible_distribution }}.yml"
     - "{{ ansible_os_family }}.yml"
-    - "default.yml"
+    - "main.yml"
 
 - include: Debian.yml
   when: ansible_os_family == "Debian"
